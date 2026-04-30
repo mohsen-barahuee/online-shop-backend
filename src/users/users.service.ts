@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
@@ -23,8 +23,17 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    try {
+      const user = await this.userRepository.find();
+      return {
+        statusCode: HttpStatus.OK,
+        data: user,
+        message: 'لیست تمام کاربران',
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   findOne(id: number) {
