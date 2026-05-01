@@ -1,4 +1,9 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
@@ -36,15 +41,48 @@ export class UsersService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user) {
+        throw new NotFoundException();
+      }
+
+      return {
+        statusCode: HttpStatus.FOUND,
+        data: user,
+        message: 'کاربر پیدا شد',
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    try {
+      await this.userRepository.update(id, updateUserDto);
+
+      return {
+        statusCode: HttpStatus.OK,
+        data: await this.userRepository.findOneBy({ id }),
+        message: 'کاربر با موفقیت بروزرسانی شد',
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const user = await this.userRepository.delete(id);
+
+    if (user.affected === 0) {
+      throw new BadRequestException();
+    }
   }
 }
