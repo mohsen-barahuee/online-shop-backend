@@ -27,11 +27,5 @@ export class AuthService {
     if (!(await compare(password, user.data.password))) {
       throw new UnauthorizedException('رمز عبور اشتباه است');
     }
-
-    const payload = {
-      mobile: user.data.mobile,
-      sub: user.data.id,
-      display_name: user.data.display_name,
-    };
   }
 }
