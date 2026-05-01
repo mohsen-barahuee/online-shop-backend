@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, Length, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  Length,
+  MinLength,
+  MaxLength,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 export class LoginDto {
   @IsNotEmpty()
@@ -11,6 +17,7 @@ export class LoginDto {
 
   @IsString()
   @MinLength(6)
+  @MaxLength(20)
   password: string;
 
   @IsNotEmpty()
