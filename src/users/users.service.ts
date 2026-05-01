@@ -62,6 +62,23 @@ export class UsersService {
     }
   }
 
+  async findOneByMobile(mobile: string) {
+    try {
+      const user = await this.userRepository.findOneBy({ mobile });
+      if (!user) {
+        throw new NotFoundException();
+      }
+
+      return {
+        statusCode: HttpStatus.FOUND,
+        data: user,
+        message: 'کاربر پیدا شد',
+      };
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOneBy({ id });
 
