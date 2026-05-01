@@ -22,7 +22,11 @@ export class UsersService {
       const user = this.userRepository.create(createUserDto);
       await this.userRepository.save(user);
 
-      return user;
+      return {
+        statusCode: HttpStatus.CREATED,
+        data: user,
+        message: 'کاربر با موفقیت ساخته شد',
+      };
     } catch (error) {
       throw new BadRequestException(error);
     }
