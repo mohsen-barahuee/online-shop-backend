@@ -16,21 +16,19 @@ export class AddressService {
   constructor(
     @InjectRepository(Address)
     private readonly addressRepository: Repository<Address>,
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
-  async create(createAddressDto: CreateAddressDto, userId: number) {
+  async create(createAddressDto: CreateAddressDto) {
     try {
+      const { userId, ...addressData } = createAddressDto;
       const user = await this.userRepository.findOneByOrFail({ id: userId });
       const address = this.addressRepository.create({
-        ...createAddressDto,
+        ...addressData,
         user,
       });
-      const data = await this.addressRepository.save(address);
-      return {
-        statusCode: HttpStatus.CREATED,
-        data,
-        message: 'آدرس با موفقیت ساخته شد',
-      };
+
+      return await this.addressRepository.save(address);
     } catch (error) {
       throw new BadRequestException(error);
     }

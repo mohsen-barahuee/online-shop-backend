@@ -1,20 +1,45 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+  HttpStatus,
+} from '@nestjs/common';
 import { AddressService } from './address.service';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { UpdateAddressDto } from './dto/update-address.dto';
+import type { Response } from 'express';
 
 @Controller('address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}
 
   @Post()
-  create(@Body() createAddressDto: CreateAddressDto) {
-    return this.addressService.create(createAddressDto);
+  async create(
+    @Body() createAddressDto: CreateAddressDto,
+    @Res() res: Response,
+  ) {
+    const address = await this.addressService.create(createAddressDto);
+
+    return res.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.CREATED,
+      data: address,
+      message: 'آدرس با موفقیت ساخته شد',
+    });
   }
 
   @Get()
-  findAll() {
-    return this.addressService.findAll();
+  async findAll(@Res() res: Response) {
+    const address = await this.addressService.findAll();
+    return res.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.FOUND,
+      data: address,
+      message: 'لیست آدرس ها ',
+    });
   }
 
   @Get(':id')
