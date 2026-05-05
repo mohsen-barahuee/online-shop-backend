@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -25,6 +26,12 @@ export class Ticket {
 
   @ManyToOne(() => User, (user) => user.address)
   user: User;
+
+  @ManyToOne(() => Ticket, (ticket) => ticket.replies, { nullable: true })
+  replayTo: Ticket;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.replayTo)
+  replies: Ticket[];
 
   @CreateDateColumn()
   created_at: Date;
