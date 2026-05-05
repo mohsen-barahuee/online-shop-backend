@@ -7,6 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+import { User } from 'src/users/entities/user.entity';
+
 @Entity({ name: 'tickets' })
 export class Ticket {
   @PrimaryGeneratedColumn()
@@ -20,6 +22,9 @@ export class Ticket {
 
   @Column()
   description: string;
+
+  @ManyToOne(() => User, (user) => user.address)
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;
