@@ -17,19 +17,16 @@ export class AuthService {
   ) {}
 
   async register(mobile: string, password: string, display_name: string) {
-    try {
-      const alreadyUser = await this.usersService.findOneByMobile(mobile);
-      if (!alreadyUser) {
-        const hashedPassword: string = await hash(password, 12);
-        return this.usersService.create({
-          mobile,
-          password: hashedPassword,
-          display_name,
-          role: UsersRoleEnum.User,
-        });
-      }
-    } catch (error) {
-      throw new BadRequestException(error);
+    const alreadyUser = await this.usersService.findOneByMobile(mobile);
+
+    if (alreadyUser) {
+      const hashedPassword: string = await hash(password, 12);
+      return this.usersService.create({
+        mobile,
+        password: hashedPassword,
+        display_name,
+        role: UsersRoleEnum.User,
+      });
     }
   }
 

@@ -9,6 +9,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,13 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const user = this.userRepository.create(createUserDto);
+      const { password, ...userData } = createUserDto;
+      const hashedPassword = await hash(password, 12);
+
+      const user = this.userRepository.create({
+        password: hashedPassword,
+        ...userData,
+      });
       await this.userRepository.save(user);
 
       return {
@@ -64,9 +71,9 @@ export class UsersService {
 
   async findOneByMobile(mobile: string) {
     try {
-      const user = await this.userRepository.findOneBy({ mobile });
+      const user = await this.userRepository.findOne({ where: { mobile } });
       if (!user) {
-        throw new NotFoundException();
+        throw new NotFoundException('user exist');
       }
 
       return {
