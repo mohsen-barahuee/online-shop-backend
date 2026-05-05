@@ -34,7 +34,7 @@ export class AddressController {
 
   @Get()
   async findAll(@Res() res: Response) {
-    const address = await this.addressService.findAll();
+    const address = await this.addressService.findAll();f
     return res.status(HttpStatus.CREATED).json({
       statusCode: HttpStatus.FOUND,
       data: address,
