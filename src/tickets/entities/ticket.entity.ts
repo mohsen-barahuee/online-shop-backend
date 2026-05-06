@@ -1,22 +1,19 @@
 import {
   Column,
-  CreateDateColumn,
+  PrimaryGeneratedColumn,
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { User } from 'src/users/entities/user.entity';
 
-@Entity({ name: 'tickets' })
+@Entity('tickets')
 export class Ticket {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  subject: string;
 
   @Column()
   title: string;
@@ -24,18 +21,18 @@ export class Ticket {
   @Column()
   description: string;
 
-  @ManyToOne(() => User, (user) => user.address)
+  @ManyToOne(() => User, (user) => user.tickets)
   user: User;
 
   @ManyToOne(() => Ticket, (ticket) => ticket.replies, { nullable: true })
-  replayTo: Ticket;
+  replyTo: Ticket | null;
 
-  @OneToMany(() => Ticket, (ticket) => ticket.replayTo)
+  @OneToMany(() => Ticket, (ticket) => ticket.replyTo, { cascade: true })
   replies: Ticket[];
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

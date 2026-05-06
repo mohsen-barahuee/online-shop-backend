@@ -1,21 +1,19 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateTicketDto {
-  @IsString({ message: 'title is not string' })
-  @IsNotEmpty({ message: 'title is empty' })
+  @IsString()
+  @IsNotEmpty()
   title: string;
 
-  @IsString({ message: 'subject is not string' })
-  @IsNotEmpty({ message: 'subject is empty' })
-  subject: string;
-
-  @IsString({ message: 'description is not string' })
-  @IsNotEmpty({ message: 'desctiption is empty' })
+  @IsString()
+  @IsNotEmpty()
   description: string;
 
-  @IsNotEmpty({ message: 'user id is empty' })
-  userId: number;
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number; // Foreign key for the user who created the ticket
 
-  @IsOptional()
-  replyTo: number;
+  @IsNumber()
+  @IsOptional() // If replyTo is optional for top-level tickets
+  replyToId?: number; // Foreign key for the parent ticket
 }

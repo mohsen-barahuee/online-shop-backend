@@ -32,7 +32,7 @@ export class User {
   address: Address[];
 
   @OneToMany(() => Ticket, (ticket) => ticket.user)
-  tiecket: Ticket[];
+  tickets: Ticket[];
 
   @CreateDateColumn()
   createdAt: Date;

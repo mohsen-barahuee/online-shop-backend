@@ -1,31 +1,46 @@
-import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Ticket } from './entities/ticket.entity';
 import { User } from 'src/users/entities/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TicketsService {
   constructor(
     @InjectRepository(Ticket)
     private readonly ticketRepository: Repository<Ticket>,
-
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
   async create(createTicketDto: CreateTicketDto) {
-    const { userId, replyTo, ...ticketData } = createTicketDto;
-    const user = await this.userRepository.findOneByOrFail({ id: userId });
+    const { userId, ...TicketData } = createTicketDto;
 
-    const replayToTicket = await this.ticketRepository.findOneByOrFail({
-      id: replyTo,
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
     });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    let replyTo: Ticket | null = null;
+
+    if (replyTo) {
+      replyTo = await this.ticketRepository.findOne({
+        where: { id: TicketData.replyToId },
+      });
+
+      if (!replyTo) {
+        throw new NotFoundException('Parent ticket not found');
+      }
+    }
+
     const ticket = this.ticketRepository.create({
+      ...TicketData,
       user,
-      replayTo: replayToTicket,
-      ...ticketData,
+      replyTo,
     });
 
     return await this.ticketRepository.save(ticket);
