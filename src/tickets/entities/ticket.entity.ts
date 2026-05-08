@@ -27,7 +27,7 @@ export class Ticket {
   @ManyToOne(() => Ticket, (ticket) => ticket.replies, { nullable: true })
   replyTo: Ticket | null;
 
-  @OneToMany(() => Ticket, (ticket) => ticket.replyTo, { cascade: true })
+  @OneToMany(() => Ticket, (ticket) => ticket.replyTo)
   replies: Ticket[];
 
   @CreateDateColumn()
