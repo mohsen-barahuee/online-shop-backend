@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Ticket } from './entities/ticket.entity';
@@ -32,8 +31,8 @@ export class TicketsService {
         where: { id: createTicketDto.replyTo },
       });
 
-      if (!replyTo) {
-        throw new NotFoundException('Parent ticket not found');
+      if (replyTo) {
+        throw new NotFoundException('This ticket already replied!!!');
       }
     }
 
@@ -46,19 +45,16 @@ export class TicketsService {
     return await this.ticketRepository.save(ticket);
   }
 
-  findAll() {
-    return `This action returns all tickets`;
+  async findAll() {
+    const tickets = await this.ticketRepository
+      .createQueryBuilder('tickets')
+      .where('tickets.replyToId IS NULL') //filtering for null tickets
+      .getMany();
+
+    return tickets;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} ticket`;
-  }
-
-  update(id: number, updateTicketDto: UpdateTicketDto) {
-    return `This action updates a #${id} ticket`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} ticket`;
   }
 }

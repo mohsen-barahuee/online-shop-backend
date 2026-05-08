@@ -4,14 +4,11 @@ import {
   Post,
   Res,
   Body,
-  Patch,
   Param,
-  Delete,
   HttpStatus,
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
 import type { Response } from 'express';
 
 @Controller('tickets')
@@ -32,22 +29,16 @@ export class TicketsController {
   }
 
   @Get()
-  findAll() {
-    return this.ticketsService.findAll();
+  async findAll(@Res() res: Response) {
+    return res.status(HttpStatus.ACCEPTED).json({
+      statusCode: HttpStatus.ACCEPTED,
+      data: await this.ticketsService.findAll(),
+      message: 'لیست تمام تیکت ها',
+    });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.ticketsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketsService.update(+id, updateTicketDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketsService.remove(+id);
   }
 }
