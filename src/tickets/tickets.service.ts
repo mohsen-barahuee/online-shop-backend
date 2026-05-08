@@ -54,7 +54,10 @@ export class TicketsService {
     return tickets;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ticket`;
+  async findOne(id: number) {
+    return await this.ticketRepository.findOne({
+      where: { id },
+      relations: ['replies', 'replyTo'],
+    });
   }
 }

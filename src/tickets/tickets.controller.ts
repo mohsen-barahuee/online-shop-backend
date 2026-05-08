@@ -38,7 +38,15 @@ export class TicketsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketsService.findOne(+id);
+  async findOne(
+    @Res() res: Response,
+    @Param('id')
+    id: string,
+  ) {
+    return res.status(HttpStatus.FOUND).json({
+      statusCode: HttpStatus.FOUND,
+      data: await this.ticketsService.findOne(+id),
+      message: 'تیکت مورد نظر پیدا شد',
+    });
   }
 }
