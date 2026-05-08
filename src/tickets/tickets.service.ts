@@ -27,9 +27,9 @@ export class TicketsService {
 
     let replyTo: Ticket | null = null;
 
-    if (replyTo) {
+    if (createTicketDto.replyTo) {
       replyTo = await this.ticketRepository.findOne({
-        where: { id: TicketData.replyToId },
+        where: { id: createTicketDto.replyTo },
       });
 
       if (!replyTo) {

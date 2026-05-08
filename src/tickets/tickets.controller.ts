@@ -2,14 +2,17 @@ import {
   Controller,
   Get,
   Post,
+  Res,
   Body,
   Patch,
   Param,
   Delete,
+  HttpStatus,
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import type { Response } from 'express';
 
 @Controller('tickets')
 export class TicketsController {
@@ -17,10 +20,15 @@ export class TicketsController {
 
   @Post()
   async create(
+    @Res() res: Response,
     @Body()
     createTicketDto: CreateTicketDto,
   ) {
-    return await this.ticketsService.create(createTicketDto);
+    return res.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.CREATED,
+      data: await this.ticketsService.create(createTicketDto),
+      message: 'تیکت ثبت شد',
+    });
   }
 
   @Get()

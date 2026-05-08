@@ -15,5 +15,5 @@ export class CreateTicketDto {
 
   @IsNumber()
   @IsOptional() // If replyTo is optional for top-level tickets
-  replyToId?: number; // Foreign key for the parent ticket
+  replyTo?: number; // Foreign key for the parent ticket
 }

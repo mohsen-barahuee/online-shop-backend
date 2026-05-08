@@ -25,7 +25,7 @@ export class Ticket {
   user: User;
 
   @ManyToOne(() => Ticket, (ticket) => ticket.replies, { nullable: true })
-  replyTo: Ticket | null;
+  replyTo: Ticket;
 
   @OneToMany(() => Ticket, (ticket) => ticket.replyTo)
   replies: Ticket[];
