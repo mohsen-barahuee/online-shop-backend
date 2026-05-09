@@ -18,6 +18,10 @@ export class CreateProductDto {
   @IsInt()
   stock: number;
 
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
   @IsOptional()
   @IsArray()
   categoryIds?: number[];
