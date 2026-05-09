@@ -22,7 +22,11 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll() {
-    return this.categoriesService.findAll();
+  async findAll(@Res() res: Response) {
+    return res.status(HttpStatus.CREATED).json({
+      statusCode: HttpStatus.CREATED,
+      data: await this.categoriesService.findAll(),
+      message: 'لیست دسته بندی هایه محصولات',
+    });
   }
 }
