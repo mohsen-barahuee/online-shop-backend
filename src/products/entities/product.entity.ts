@@ -5,9 +5,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { BookmarkProduct } from './bookmark-product.entity';
 
 @Entity('products')
 export class Product {
@@ -33,6 +35,9 @@ export class Product {
     inverseJoinColumn: { name: 'category_id', referencedColumnName: 'id' },
   })
   categories: Category[];
+
+  @OneToMany(() => BookmarkProduct, (bookmark) => bookmark.product)
+  bookMarks: BookmarkProduct[];
 
   @CreateDateColumn()
   createdAt: Date;
