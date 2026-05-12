@@ -77,6 +77,14 @@ export class ProductsService {
     await this.userService.addProductToBasket(userId, product);
   }
 
+  async basketItemRemove(userId: number, productId: number) {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+
+    return this.userService.removeProductFromBasket(userId, product);
+  }
+
   remove(id: number) {
     return `This action removes a #${id} product`;
   }

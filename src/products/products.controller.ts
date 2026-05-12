@@ -50,6 +50,23 @@ export class ProductsController {
     });
   }
 
+  @Post('remove-product')
+  async removeItemFromBasket(
+    @Body() bookmarkProduct: CreateBookmarkDto,
+    @Res() res: Response,
+  ) {
+    const productData = await this.productsService.basketItemRemove(
+      bookmarkProduct.user_id,
+      bookmarkProduct.product_id,
+    );
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: productData,
+      message: ' محصول با موفقیت حذف شد',
+    });
+  }
+
   @Get()
   async findAll(@Res() res: Response) {
     const products = await this.productsService.findAll();
