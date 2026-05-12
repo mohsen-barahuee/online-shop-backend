@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Address } from 'src/address/entities/address.entity';
-import { OrderStatus } from '../enums/orderStatus.enum';
+import { OrderStatus } from 'enums/orderStatus.enum';
 
 @Entity('orders')
 export class Order {

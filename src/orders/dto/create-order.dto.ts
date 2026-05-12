@@ -4,8 +4,7 @@ import {
   IsOptional,
   IsNumberString,
 } from 'class-validator';
-import { OrderStatus } from '../enums/orderStatus.enum';
-
+import { OrderStatus } from 'enums/orderStatus.enum';
 export class CreateOrderDto {
   @IsNotEmpty({ message: 'شناسه کاربر نباید خالی باشد' })
   @IsNumberString({}, { message: 'شناسه کاربر باید یک عدد معتبر باشد' })
