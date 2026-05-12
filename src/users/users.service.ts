@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
+import { Product } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class UsersService {
@@ -106,7 +107,7 @@ export class UsersService {
     }
   }
 
-  async addProductToBasket(userId: number, product) {
+  async addProductToBasket(userId: number, product: Product) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['basket_items'],
@@ -117,7 +118,7 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async removeProductFromBasket(userId: number, product) {
+  async removeProductFromBasket(userId: number, product: Product) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['basket_items'],
@@ -126,6 +127,10 @@ export class UsersService {
     const productIndex = user.basket_items.findIndex(
       (item) => item.id === product.id,
     );
+
+    if (productIndex === -1) {
+      throw new BadRequestException('این محصول در سبد خرید کاربر وجود ندارد');
+    }
 
     user.basket_items.splice(productIndex, 1);
 
