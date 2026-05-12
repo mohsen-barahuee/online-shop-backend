@@ -13,6 +13,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import type { Response } from 'express';
+import { CreateBookmarkDto } from './dto/create-bookmark.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -29,6 +30,23 @@ export class ProductsController {
       statusCode: HttpStatus.CREATED,
       data: product,
       message: 'محصول با موفقیت ایجاد شد',
+    });
+  }
+
+  @Post('add-product')
+  async addItemToBasket(
+    @Body() bookmarkProduct: CreateBookmarkDto,
+    @Res() res: Response,
+  ) {
+    const productData = await this.productsService.addItemToBasket(
+      bookmarkProduct.user_id,
+      bookmarkProduct.product_id,
+    );
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: productData,
+      message: ' محصول با موفقیت به سبد خرید اضافه شد',
     });
   }
 

@@ -9,6 +9,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ProductsService {
@@ -18,6 +19,8 @@ export class ProductsService {
 
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+
+    private readonly userService: UsersService,
   ) {}
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
@@ -64,6 +67,14 @@ export class ProductsService {
     } catch (error) {
       throw new BadGatewayException(error);
     }
+  }
+
+  async addItemToBasket(userId: number, productId: number) {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+
+    await this.userService.addProductToBasket(userId, product);
   }
 
   remove(id: number) {

@@ -106,6 +106,17 @@ export class UsersService {
     }
   }
 
+  async addProductToBasket(userId: number, product) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['basket_items'],
+    });
+
+    user.basket_items.push(product);
+
+    return await this.userRepository.save(user);
+  }
+
   async remove(id: number): Promise<void> {
     const user = await this.userRepository.delete(id);
 

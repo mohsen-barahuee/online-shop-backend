@@ -46,7 +46,7 @@ export class User {
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'product_id', referencedColumnName: 'id' },
   })
-  basket_item: Product[];
+  basket_items: Product[];
 
   @CreateDateColumn()
   createdAt: Date;
