@@ -3,11 +3,13 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
   JoinColumn,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Address } from 'src/address/entities/address.entity';
 import { OrderStatus } from 'enums/orderStatus.enum';
+import { OrderItem } from './order-itemts.entity';
 
 @Entity('orders')
 export class Order {
@@ -47,4 +49,7 @@ export class Order {
   @ManyToOne(() => Address)
   @JoinColumn({ name: 'address_id' })
   address: Address;
+
+  @OneToMany(() => OrderItem, (item) => item.order)
+  items: OrderItem[];
 }
