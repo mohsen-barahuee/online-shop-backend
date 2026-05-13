@@ -3,13 +3,18 @@ import {
   IsEnum,
   IsOptional,
   IsNumberString,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+
+import { Type } from 'class-transformer';
 import { OrderStatus } from 'enums/orderStatus.enum';
+import { CreateOrderItemDto } from './create-order-items.dto';
 
 export class CreateOrderDto {
   @IsNotEmpty({ message: 'شناسه کاربر نباید خالی باشد' })
   @IsNumberString({}, { message: 'شناسه کاربر باید یک عدد معتبر باشد' })
-  user_id: string;
+  userId: number;
 
   @IsOptional()
   @IsEnum(OrderStatus, {
@@ -26,7 +31,7 @@ export class CreateOrderDto {
 
   @IsOptional()
   @IsNumberString({}, { message: 'شناسه آدرس باید عدد باشد' })
-  address_id?: string;
+  addressId?: number;
 
   @IsNotEmpty({ message: 'مبلغ کل نباید خالی باشد' })
   @IsNumberString({}, { message: 'مبلغ کل باید یک عدد معتبر باشد' })
@@ -35,4 +40,8 @@ export class CreateOrderDto {
   @IsOptional()
   @IsNumberString({}, { message: 'شناسه کد تخفیف باید عدد باشد' })
   discount_code?: string;
+  @IsArray({ message: 'آیتم‌های سفارش باید به صورت آرایه ارسال شوند' })
+  @ValidateNested({ each: true, message: 'هر آیتم سفارش باید معتبر باشد' })
+  @Type(() => CreateOrderItemDto)
+  items: CreateOrderItemDto[];
 }
