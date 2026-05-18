@@ -12,16 +12,20 @@ import { OrderStatus } from 'enums/orderStatus.enum';
 
 @Injectable()
 export class OrdersService {
-  @InjectRepository(Order)
-  private readonly orderRepository: Repository<Order>;
-  @InjectRepository(OrderItem)
-  private readonly orderItemRepository: Repository<OrderItem>;
-  private readonly userService: UsersService;
-  private readonly addressService: AddressService;
-  private readonly productService: ProductsService;
+  constructor(
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
+    @InjectRepository(OrderItem)
+    private readonly orderItemRepository: Repository<OrderItem>,
+
+    private readonly addressService: AddressService,
+    private readonly productService: ProductsService,
+    private readonly userService: UsersService,
+  ) {}
 
   async create(createOrderDto: CreateOrderDto) {
     const user = (await this.userService.findOne(createOrderDto.userId)).data;
+
     const address = (
       await this.addressService.findOne(createOrderDto.addressId)
     ).data;
@@ -53,8 +57,10 @@ export class OrdersService {
     return savedOrder;
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll() {
+    return await this.orderRepository.find({
+      relations: ['user', 'address', 'items', 'items.product'],
+    });
   }
 
   findOne(id: number) {

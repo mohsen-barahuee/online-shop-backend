@@ -13,7 +13,6 @@ import { CreateOrderItemDto } from './create-order-items.dto';
 
 export class CreateOrderDto {
   @IsNotEmpty({ message: 'شناسه کاربر نباید خالی باشد' })
-  @IsNumberString({}, { message: 'شناسه کاربر باید یک عدد معتبر باشد' })
   userId: number;
 
   @IsOptional()
@@ -30,12 +29,10 @@ export class CreateOrderDto {
   payed_time?: Date;
 
   @IsOptional()
-  @IsNumberString({}, { message: 'شناسه آدرس باید عدد باشد' })
   addressId?: number;
 
   @IsNotEmpty({ message: 'مبلغ کل نباید خالی باشد' })
-  @IsNumberString({}, { message: 'مبلغ کل باید یک عدد معتبر باشد' })
-  total_price: string;
+  total_price: number;
 
   @IsOptional()
   @IsNumberString({}, { message: 'شناسه کد تخفیف باید عدد باشد' })
