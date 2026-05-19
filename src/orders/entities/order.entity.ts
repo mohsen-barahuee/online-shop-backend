@@ -35,7 +35,7 @@ export class Order {
   @Column({ type: 'bigint', nullable: true })
   address_id: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, type: 'bigint' })
   total_price: number;
 
   @Column({ type: 'bigint', nullable: true })

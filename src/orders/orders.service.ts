@@ -33,16 +33,20 @@ export class OrdersService {
     const order = this.orderRepository.create({
       user,
       address,
-      total_price: createOrderDto.total_price,
+
       discount_code: createOrderDto.discount_code,
       status: createOrderDto.status || OrderStatus.PENDING,
     });
 
     const savedOrder = await this.orderRepository.save(order);
 
+    let totalPrice: number = 0;
+
     if (createOrderDto.items && createOrderDto.items.length > 0) {
       const orderItems = createOrderDto.items.map(async (item) => {
         const product = await this.productService.findOne(item.productId);
+
+        totalPrice += product.price;
 
         const orderItem = this.orderItemRepository.create({
           order: savedOrder,
@@ -54,7 +58,18 @@ export class OrdersService {
 
       await Promise.all(orderItems);
     }
-    return savedOrder;
+
+    await this.orderRepository.update(
+      { id: savedOrder.id },
+      { total_price: totalPrice },
+    );
+
+    const returnedOrder = await this.orderRepository.findOne({
+      where: { id: savedOrder.id },
+      relations: ['user', 'address', 'items', 'items.product'],
+    });
+
+    return returnedOrder;
   }
 
   async findAll() {

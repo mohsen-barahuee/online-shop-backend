@@ -31,9 +31,6 @@ export class CreateOrderDto {
   @IsOptional()
   addressId?: number;
 
-  @IsNotEmpty({ message: 'مبلغ کل نباید خالی باشد' })
-  total_price: number;
-
   @IsOptional()
   @IsNumberString({}, { message: 'شناسه کد تخفیف باید عدد باشد' })
   discount_code?: string;
