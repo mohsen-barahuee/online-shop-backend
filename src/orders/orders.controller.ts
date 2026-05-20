@@ -13,6 +13,7 @@ import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import type { Response } from 'express';
+import { PaymentDto } from './dto/payment-order.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -51,5 +52,23 @@ export class OrdersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ordersService.remove(+id);
+  }
+
+  @Post('/start-payment')
+  async startPayment(@Res() res: Response, @Body() paymentDto: PaymentDto) {
+    const payment = await this.ordersService.startPayment(paymentDto.amount);
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      data: {
+        ...payment,
+        peyment_url: `https://gateway.zibal.ir/start/${payment.trackId}`,
+      },
+      message: 'دیتا با موفقیت پیدا شد',
+    });
+  }
+
+  @Get('/peyment/verfiy')
+  verfiyPeyment() {
+    return 'peyment succesfull';
   }
 }

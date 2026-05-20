@@ -9,7 +9,14 @@ import { UsersService } from 'src/users/users.service';
 import { AddressService } from 'src/address/address.service';
 import { ProductsService } from 'src/products/products.service';
 import { OrderStatus } from 'enums/orderStatus.enum';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 
+interface ZibalRequestResponse {
+  result: number;
+  trackId: string;
+  message: string;
+}
 @Injectable()
 export class OrdersService {
   constructor(
@@ -21,6 +28,7 @@ export class OrdersService {
     private readonly addressService: AddressService,
     private readonly productService: ProductsService,
     private readonly userService: UsersService,
+    private readonly httpService: HttpService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
@@ -88,5 +96,21 @@ export class OrdersService {
 
   remove(id: number) {
     return `This action removes a #${id} order`;
+  }
+
+  async startPayment(amount: number): Promise<ZibalRequestResponse> {
+    const body: object = {
+      merchant: 'zibal',
+      amount: amount * 10,
+      callbackUrl: 'http://localhost:3000/orders/peyment/verfiy',
+    };
+
+    const response = this.httpService.post(
+      'https://gateway.zibal.ir/v1/request',
+      body,
+    );
+    const axiosResponse = await lastValueFrom(response);
+
+    return axiosResponse.data as ZibalRequestResponse;
   }
 }
