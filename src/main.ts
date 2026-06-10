@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { JwtAuthGaurd } from './auth/gaurd/jwt-auth.gaurd';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
