@@ -12,11 +12,13 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGaurd } from 'src/auth/gaurd/jwt-auth.gaurd';
+import { JwtAuthGaurd } from 'src/auth/guard/jwt-auth.gaurd';
 import { Roles } from 'src/auth/decorators/role.decorator';
 import UsersRoleEnum from 'enums/usersRoleEnums';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
 @Controller('users')
+@UseGuards(RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -11,7 +11,8 @@ import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { OrdersModule } from './orders/orders.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGaurd } from './auth/gaurd/jwt-auth.gaurd';
+import { JwtAuthGaurd } from './auth/guard/jwt-auth.gaurd';
+import { RolesGuard } from './auth/guard/roles.guard';
 
 @Module({
   imports: [
