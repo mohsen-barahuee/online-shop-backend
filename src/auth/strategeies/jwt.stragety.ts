@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import UsersRoleEnum from 'enums/usersRoleEnums';
 
-type JwtPaload = {
+export type JwtPayload = {
   sub: number;
   mobile: string;
   display_name: string;
@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: JwtPaload) {
+  validate(payload: JwtPayload) {
     return {
       userId: payload.sub,
       mobile: payload.display_name,

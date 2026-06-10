@@ -15,6 +15,7 @@ export class AuthController {
     return this.authService.register(mobile, password, display_name);
   }
 
+  @Public()
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     const { mobile, password } = loginDto;
