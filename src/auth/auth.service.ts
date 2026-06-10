@@ -42,6 +42,7 @@ export class AuthService {
         mobile: user.mobile,
         sub: user.id,
         display_name: user.display_name,
+        role: user.role,
       };
 
       const token: string = this.jwtService.sign(payload);

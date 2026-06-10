@@ -13,6 +13,8 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGaurd } from 'src/auth/gaurd/jwt-auth.gaurd';
+import { Roles } from 'src/auth/decorators/role.decorator';
+import UsersRoleEnum from 'enums/usersRoleEnums';
 
 @Controller('users')
 export class UsersController {
@@ -32,6 +34,7 @@ export class UsersController {
     };
   }
 
+  @Roles(UsersRoleEnum.Admin)
   @Get()
   findAll() {
     return this.usersService.findAll();
