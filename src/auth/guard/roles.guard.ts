@@ -1,34 +1,33 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/role.decorator';
 import UsersRoleEnum from 'enums/usersRoleEnums';
-import { JwtPayload } from '../strategeies/jwt.stragety';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    console.log('=== ROLES GUARD IS RUNNING ===');
-    // get roles in metadata
     const requiredRoles = this.reflector.getAllAndOverride<UsersRoleEnum[]>(
       ROLES_KEY,
       [context.getClass(), context.getHandler()],
     );
 
-    if (!requiredRoles) {
-      return true;
-    }
+    if (!requiredRoles) return true;
 
-    // ✅ No type assertion needed
-    const request: object = context.switchToHttp().getRequest();
-    const user = request.user as JwtPayload; // Use 'as' here if needed, or better yet:
-    // const user: JwtPayload = request.user; // This is cleaner
+    // get user data from jwt token
+    const { user } = context.switchToHttp().getRequest();
+
+    // check access role
     const hasRole = requiredRoles.includes(user.role);
 
-    if (!hasRole) {
-      return false;
-    }
+    if (!hasRole)
+      throw new ForbiddenException('شما اجازه دسترسی به این مسیر رو ندارید!');
 
     return true;
   }
